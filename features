@@ -9,7 +9,23 @@ can submit posts online -> mods review and approve
 
 users -> submit, like, share, save, download
 
+blog as well
+
+
+
 
 an open source event collaboration with lit and gdg or ptsc , 
 
 you have to create a tool which automatically writes the content on a pic which can be posted on litc website
+
+
+login / signup
+
+admin/ members/
+
+tech stack
+- Nextjs for frontend -> source
+- backend: 
+    - Express
+    - NodeJS
+    - MongoDB
