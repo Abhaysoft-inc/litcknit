@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+import { Crimson_Text } from "next/font/google";
 import "./globals.css";
 
+const crimsonText = Crimson_Text({
+  weight: ['400', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Literary Council KNIT Sultanpur",
@@ -15,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`antialiased`}
+        className={`${crimsonText.className} antialiased`}
       >
         {children}
       </body>

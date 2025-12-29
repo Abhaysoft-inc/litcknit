@@ -1,1 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Open+Sans:wght@300;400;600;700&display=swap');
+
 @import "tailwindcss";
+
+/* Literary Council Custom Styles */
+
+/* Color Scheme:
+  Primary: Amber/Orange (warm, literary feel)
+  - amber-900: #78350f (dark accent)
+  - amber-600: #d97706 (primary)
+  - amber-100: #fef3c7 (light)
+  
+  Secondary: Rose (for hearts/love)
+  - rose-500: #f43f5e
+  
+  Neutrals: Gray scale
+*/
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    @apply text-gray-900;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Merriweather', serif;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.6s ease-out;
+}
