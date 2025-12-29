@@ -6,6 +6,7 @@ interface LovedItem {
     author: string
     hearts: number
     image: string
+    color: string
 }
 
 interface MostLovedSectionProps {
@@ -14,38 +15,43 @@ interface MostLovedSectionProps {
 
 export default function MostLovedSection({ items }: MostLovedSectionProps) {
     return (
-        <section className="mb-20 bg-gradient-to-r from-orange-50 to-amber-50 rounded-3xl p-8 md:p-12">
-            <div className="flex items-center mb-8">
-                <FaHeart className="w-8 h-8 text-rose-500 mr-3 fill-rose-500" />
-                <h2 className="font-serif text-4xl font-bold text-gray-900">Most Loved</h2>
+        <section className="mb-16">
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center">
+                    <FaHeart className="w-6 h-6 text-[#8b7355] mr-2" />
+                    <h2 className="font-serif text-2xl font-bold text-gray-900">Community Favorites</h2>
+                </div>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {items.map((item) => (
                     <div
                         key={item.id}
-                        className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-2"
+                        className="group bg-[#f5e6d3] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-[#e8d4bd]"
                     >
-                        <div className="bg-gradient-to-br from-amber-100 to-orange-100 h-48 flex items-center justify-center text-7xl">
-                            {item.image}
-                        </div>
-                        <div className="p-6">
-                            <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">
-                                {item.title}
-                            </h3>
-                            <p className="text-gray-600 mb-4">by {item.author}</p>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center text-rose-500">
-                                    <FaHeart className="w-5 h-5 mr-2 fill-rose-500" />
-                                    <span className="font-semibold">{item.hearts}</span>
+                        {/* Content */}
+                        <div className="p-4">
+                            {/* Icon */}
+                            <div className="text-4xl mb-3 flex justify-center items-center">
+                                {item.image}
+                            </div>
+
+                            {/* Info */}
+                            <div>
+                                <h3 className="font-serif text-sm font-bold text-gray-900 mb-1 line-clamp-2 text-center">
+                                    {item.title}
+                                </h3>
+                                <p className="text-xs text-gray-600 mb-2 text-center">by {item.author}</p>
+                                <div className="flex items-center justify-center gap-1 text-[#8b7355]">
+                                    <FaHeart className="w-3 h-3" />
+                                    <span className="font-bold text-xs">{item.hearts.toLocaleString()}</span>
                                 </div>
-                                <button className="text-amber-600 font-medium hover:text-amber-700">
-                                    Read →
-                                </button>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
         </section>
+
     )
 }
