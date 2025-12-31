@@ -1,25 +1,66 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MdAdminPanelSettings } from 'react-icons/md'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { useRouter } from 'next/navigation'
 
 const AdminLoginPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
+    const router = useRouter()
+
+    useEffect(() => {
+        // Check if already authenticated
+        const token = localStorage.getItem('adminToken')
+        const user = localStorage.getItem('adminUser')
+
+        if (token && user) {
+            const parsedUser = JSON.parse(user)
+            if (parsedUser.role === 'admin') {
+                router.push('/admin/dashboard')
+            }
+        }
+    }, [router])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
-
-        // Add your admin login logic here
+        setError('')
 
         try {
-            // Example: await adminLogin(email, password)
-            console.log('Admin login attempt:', { email, password })
+            const response = await fetch('/api/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                setError(data.error || 'Login failed')
+                return
+            }
+
+            // Check if user is admin
+            if (data.user.role !== 'admin') {
+                setError('Access denied. Admin privileges required.')
+                return
+            }
+
+            // Store token in localStorage
+            localStorage.setItem('adminToken', data.jwtToken)
+            localStorage.setItem('adminUser', JSON.stringify(data.user))
+
+            // Redirect to admin dashboard
+            router.push('/admin/dashboard')
         } catch (error) {
             console.error('Admin login error:', error)
+            setError('An error occurred. Please try again.')
         } finally {
             setIsLoading(false)
         }
@@ -43,6 +84,13 @@ const AdminLoginPage = () => {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="mt-8 space-y-6 bg-white p-6 sm:p-8 rounded-lg shadow">
+                    {/* Error Message */}
+                    {error && (
+                        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <span className="block sm:inline">{error}</span>
+                        </div>
+                    )}
+
                     <div className="space-y-5">
                         {/* Email Field */}
                         <div>

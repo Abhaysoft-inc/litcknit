@@ -1,12 +1,21 @@
-import { FaHeart } from 'react-icons/fa'
+import { FaHeart, FaBook, FaPen, FaTheaterMasks, FaMoon, FaCity, FaLeaf } from 'react-icons/fa'
 
 interface LovedItem {
     id: number
     title: string
     author: string
     hearts: number
-    image: string
+    icon: string
     color: string
+}
+
+const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
+    book: FaBook,
+    pen: FaPen,
+    theater: FaTheaterMasks,
+    moon: FaMoon,
+    city: FaCity,
+    leaf: FaLeaf,
 }
 
 interface MostLovedSectionProps {
@@ -32,8 +41,11 @@ export default function MostLovedSection({ items }: MostLovedSectionProps) {
                         {/* Content */}
                         <div className="p-4">
                             {/* Icon */}
-                            <div className="text-4xl mb-3 flex justify-center items-center">
-                                {item.image}
+                            <div className="mb-3 flex justify-center items-center">
+                                {(() => {
+                                    const IconComponent = iconMap[item.icon]
+                                    return IconComponent ? <IconComponent className="w-10 h-10 text-[#8b7355]" /> : null
+                                })()}
                             </div>
 
                             {/* Info */}

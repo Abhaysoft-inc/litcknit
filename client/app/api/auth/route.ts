@@ -3,6 +3,7 @@ import { connectDB } from "@/config/dbconnection";
 import User from '@/models/user'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
+import { verifyToken } from "@/middleware/authMiddleware";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -54,7 +55,8 @@ export async function POST(req: Request) {
         const { password: _, ...userWithoutPassword } = userObject;
         const token = await jwt.sign({
             userId: user._id,
-            userEmail: user.email
+            userEmail: user.email,
+            role: user.role
         }, JWT_SECRET);
 
         return NextResponse.json(

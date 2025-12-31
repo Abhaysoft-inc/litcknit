@@ -1,4 +1,4 @@
-import { FaBookOpen, FaFileAlt } from 'react-icons/fa'
+import { FaBookOpen, FaFileAlt, FaBook, FaBookReader, FaBookmark } from 'react-icons/fa'
 
 interface Book {
     id: number
@@ -7,6 +7,13 @@ interface Book {
     cover: string
     genre: string
     pages: number
+}
+
+const bookIconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
+    'book': FaBook,
+    'book-open': FaBookOpen,
+    'book-reader': FaBookReader,
+    'bookmark': FaBookmark,
 }
 
 interface FeaturedBooksSectionProps {
@@ -48,8 +55,11 @@ export default function FeaturedBooksSection({ books }: FeaturedBooksSectionProp
                             </div>
 
                             {/* Book emoji/icon */}
-                            <div className={`relative ${index === 0 ? 'text-9xl' : 'text-7xl'} mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                                {book.cover}
+                            <div className={`relative mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                                {(() => {
+                                    const BookIcon = bookIconMap[book.cover]
+                                    return BookIcon ? <BookIcon className={`${index === 0 ? 'w-24 h-24' : 'w-16 h-16'} text-amber-900`} /> : null
+                                })()}
                             </div>
 
                             {/* Genre badge */}

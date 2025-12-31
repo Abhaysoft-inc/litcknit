@@ -1,4 +1,4 @@
-import { FaQuoteLeft, FaUserTie } from 'react-icons/fa'
+import { FaQuoteLeft, FaUserTie, FaUserGraduate, FaUser } from 'react-icons/fa'
 
 interface CouncilHead {
     id: number
@@ -7,6 +7,12 @@ interface CouncilHead {
     thought: string
     avatar: string
     color: string
+}
+
+const avatarIconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
+    'user-graduate': FaUserGraduate,
+    'user-tie': FaUserTie,
+    'user': FaUser,
 }
 
 interface CouncilHeadsSectionProps {
@@ -42,8 +48,11 @@ export default function CouncilHeadsSection({ heads }: CouncilHeadsSectionProps)
                             {/* Profile Section */}
                             <div className="flex items-center gap-3 pt-3 border-t border-[#e8d4bd]">
                                 {/* Avatar */}
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border border-[#e8d4bd] flex items-center justify-center text-xl">
-                                    {head.avatar}
+                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border border-[#e8d4bd] flex items-center justify-center">
+                                    {(() => {
+                                        const AvatarIcon = avatarIconMap[head.avatar]
+                                        return AvatarIcon ? <AvatarIcon className="w-5 h-5 text-[#8b7355]" /> : null
+                                    })()}
                                 </div>
 
                                 {/* Info */}
