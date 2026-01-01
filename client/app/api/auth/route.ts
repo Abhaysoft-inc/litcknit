@@ -3,7 +3,7 @@ import { connectDB } from "@/config/dbconnection";
 import User from '@/models/user'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
-import { verifyToken } from "@/middleware/authMiddleware";
+
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -51,11 +51,11 @@ export async function POST(req: Request) {
 
         // Return user data (excluding password)
         const userObject = user.toObject();
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password: _, ...userWithoutPassword } = userObject;
         const token = await jwt.sign({
             userId: user._id,
-            userEmail: user.email,
             role: user.role
         }, JWT_SECRET);
 
