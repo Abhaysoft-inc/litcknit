@@ -100,7 +100,7 @@ const PostsSection = () => {
         <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full">
             <div className="relative h-36 w-full">
                 <Image src={post.image} alt={post.title} fill className="object-cover" />
-                <div className="absolute top-2 left-2 bg-skin-light text-beige-light px-2 py-1 rounded-full text-xs font-semibold">
+                <div className="absolute top-2 left-2 bg-skin-light text-skin-lightest px-2 py-1 rounded-full text-xs font-semibold">
                     {post.category}
                 </div>
             </div>
@@ -202,7 +202,7 @@ const PostsSection = () => {
     )
 
     return (
-        <section className="w-full py-20 px-8 md:px-20 bg-beige-light">
+        <section id="posts-section" className="w-full py-20 px-8 md:px-20 bg-skin-lightest">
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16">

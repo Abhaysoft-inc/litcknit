@@ -37,14 +37,14 @@ const EventsSection = () => {
     ]
 
     return (
-        <section className="w-full py-20 px-8 md:px-20 bg-tan-light">
+        <section id="events-section" className="w-full py-20 px-8 md:px-20 bg-skin-light">
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-serif text-skin-deep mb-4">
                         Upcoming Events
                     </h2>
-                    <p className="text-xl text-tan-dark max-w-2xl mx-auto">
+                    <p className="text-xl text-skin-deep max-w-2xl mx-auto">
                         Discover our exciting lineup of literary events, workshops, and competitions
                     </p>
                 </div>

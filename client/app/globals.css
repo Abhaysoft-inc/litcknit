@@ -2,6 +2,23 @@
 
 @import "tailwindcss";
 
+@theme {
+    /* Skin-tone inspired color palette */
+    --color-skin-lightest: #faf0e6;
+    --color-skin-lighter: #f5e6d3;
+    --color-skin-light: #e8cdb0;
+    --color-skin-base: #d4a574;
+    --color-skin-medium: #c9955e;
+    --color-skin-deep: #8b6f47;
+    --color-skin-darker: #6b563a;
+    --color-skin-darkest: #4a3f2e;
+
+    /* Legacy color mappings for existing components */
+    --color-beige-light: #faf0e6;
+    --color-tan-light: #e8cdb0;
+    --color-tan-dark: #8b6f47;
+}
+
 /* Literary Council Custom Styles */
 
 /* Color Scheme:
