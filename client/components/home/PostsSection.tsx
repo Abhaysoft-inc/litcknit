@@ -229,9 +229,12 @@ const PostsSection = () => {
 
             {/* View All Button */}
             <div className="text-center mt-12">
-                <button className="border-2 border-skin-deep hover:bg-skin-light text-skin-deep font-semibold py-3 px-8 rounded-xl transition-colors duration-300">
+                <a
+                    href="/posts"
+                    className="inline-block border-2 border-skin-deep hover:bg-skin-light text-skin-deep font-semibold py-3 px-8 rounded-xl transition-colors duration-300"
+                >
                     View All Posts
-                </button>
+                </a>
             </div>
         </section>
 

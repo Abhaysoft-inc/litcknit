@@ -11,7 +11,7 @@ const Navbar = () => {
         <nav className="relative z-10 px-6 md:px-10 py-4 bg-skin-lightest">
             <div className="flex items-center justify-between">
                 {/* Logos */}
-                <div className="flex items-center gap-2">
+                <a href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
                     <Image
                         src="/foot-logo.png"
                         alt="KNIT Logo"
@@ -27,27 +27,14 @@ const Navbar = () => {
                         height={70}
                         className="object-fill md:w-[60px] md:h-[65px]"
                     />
-                </div>
+                </a>
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-6">
                     <ul className="flex space-x-5 text-lg">
-                        <li>
-                            <button
-                                onClick={() => document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="hover:text-skin-deep cursor-pointer"
-                            >
-                                Events
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => document.getElementById('posts-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="hover:text-skin-deep cursor-pointer"
-                            >
-                                Posts
-                            </button>
-                        </li>
+                        <li><a href="/" className="hover:text-skin-deep">Home</a></li>
+                        <li><a href="/events" className="hover:text-skin-deep">Events</a></li>
+                        <li><a href="/posts" className="hover:text-skin-deep">Posts</a></li>
                         <li><a href="/members" className="hover:text-skin-deep">Members</a></li>
                         <li><a href="/about" className="hover:text-skin-deep">About</a></li>
                         <li><a href="/contact" className="hover:text-skin-deep">Contact</a></li>
@@ -80,28 +67,9 @@ const Navbar = () => {
                 }
             >
                 <ul className="flex flex-col space-y-2 px-6 py-4 text-lg">
-                    <li>
-                        <button
-                            onClick={() => {
-                                document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' });
-                                setIsMenuOpen(false);
-                            }}
-                            className="block hover:text-skin-deep w-full text-left"
-                        >
-                            Events
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            onClick={() => {
-                                document.getElementById('posts-section')?.scrollIntoView({ behavior: 'smooth' });
-                                setIsMenuOpen(false);
-                            }}
-                            className="block hover:text-skin-deep w-full text-left"
-                        >
-                            Posts
-                        </button>
-                    </li>
+                    <li><a href="/" onClick={() => setIsMenuOpen(false)} className="block hover:text-skin-deep">Home</a></li>
+                    <li><a href="/events" onClick={() => setIsMenuOpen(false)} className="block hover:text-skin-deep">Events</a></li>
+                    <li><a href="/posts" onClick={() => setIsMenuOpen(false)} className="block hover:text-skin-deep">Posts</a></li>
                     <li><a href="/members" onClick={() => setIsMenuOpen(false)} className="block hover:text-skin-deep">Members</a></li>
                     <li><a href="/about" onClick={() => setIsMenuOpen(false)} className="block hover:text-skin-deep">About</a></li>
                     <li><a href="/contact" onClick={() => setIsMenuOpen(false)} className="block hover:text-skin-deep">Contact</a></li>

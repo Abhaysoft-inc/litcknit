@@ -52,9 +52,10 @@ const EventsSection = () => {
                 {/* Events Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {events.map((event) => (
-                        <div
+                        <a
                             key={event.id}
-                            className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                            href={`/events/${event.id}`}
+                            className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 block"
                         >
                             {/* Event Image */}
                             <div className="relative h-64 w-full">
@@ -95,15 +96,18 @@ const EventsSection = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     ))}
                 </div>
 
                 {/* View All Button */}
                 <div className="text-center mt-12">
-                    <button className="border-2 border-skin-deep hover:bg-skin-light text-skin-deep font-semibold py-3 px-8 rounded-xl transition-colors duration-300">
+                    <a
+                        href="/events"
+                        className="inline-block border-2 border-skin-deep hover:bg-skin-light text-skin-deep font-semibold py-3 px-8 rounded-xl transition-colors duration-300"
+                    >
                         View All Events
-                    </button>
+                    </a>
                 </div>
             </div>
         </section>
