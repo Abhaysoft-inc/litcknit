@@ -7,14 +7,16 @@ import dbconnection from "@/config/dbconnection";
 // GET /api/events/[id] - Get single event
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
+        const { id } = await context.params;
+
         const event = await eventModel
-            .findById(params.id)
-            .populate('createdBy', 'name email')
+            .findById(id)
+
             .lean();
 
         if (!event) {
@@ -41,12 +43,14 @@ export async function GET(
 // PATCH /api/events/[id] - Update event (Admin only)
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
         const body = await req.json();
+
+        const { id } = await context.params;
 
         // Validate dates if provided
         if (body.date && body.registrationDeadline) {
@@ -63,11 +67,11 @@ export async function PATCH(
 
         const event = await eventModel
             .findByIdAndUpdate(
-                params.id,
+                id,
                 { $set: body },
                 { new: true, runValidators: true }
             )
-            .populate('createdBy', 'name email');
+
 
         if (!event) {
             return NextResponse.json({
@@ -94,12 +98,14 @@ export async function PATCH(
 // DELETE /api/events/[id] - Delete event (Admin only)
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
-        const event = await eventModel.findByIdAndDelete(params.id);
+        const { id } = await context.params;
+
+        const event = await eventModel.findByIdAndDelete(id);
 
         if (!event) {
             return NextResponse.json({

@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import eventModel from "@/models/event";
+import userModel from "@/models/user";
 import dbconnection from "@/config/dbconnection";
 
 // GET /api/events - Get all events with optional filters
@@ -32,7 +33,6 @@ export async function GET(req: NextRequest) {
 
         const events = await eventModel
             .find(query)
-            .populate('createdBy', 'name email')
             .sort({ date: 1 })
             .lean();
 
@@ -78,6 +78,18 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({
                 success: false,
                 message: 'Registration deadline must be before event date'
+            }, { status: 400 });
+        }
+
+        // Check for existing event with same name (case-insensitive)
+        const existing = await eventModel.findOne({
+            name: { $regex: new RegExp(`^${body.name}$`, 'i') }
+        });
+
+        if (existing) {
+            return NextResponse.json({
+                success: false,
+                message: 'An event with this name already exists'
             }, { status: 400 });
         }
 
