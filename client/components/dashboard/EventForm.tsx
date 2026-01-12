@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import Image from 'next/image';
 
 interface EventFormProps {
     eventId?: string;
@@ -13,6 +14,7 @@ export default function EventForm({ eventId }: EventFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(!!eventId);
     const [submitting, setSubmitting] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
@@ -82,6 +84,82 @@ export default function EventForm({ eventId }: EventFormProps) {
             [name]:
                 name === 'maxParticipants' || name === 'teamSize' ? Number(value) || 0 : value,
         }));
+    };
+
+    const handleFileUpload = async (file: File, fileType: 'image' | 'pdf') => {
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('fileType', fileType);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || 'Upload failed');
+            }
+
+            toast.success(`${fileType === 'image' ? 'Poster' : 'Rulebook'} uploaded successfully`);
+            return data.data.url;
+        } catch (err: any) {
+            toast.error(err.message || 'Upload failed');
+            throw err;
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handlePosterChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            toast.error('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Image size should be less than 5MB');
+            return;
+        }
+
+        try {
+            const url = await handleFileUpload(file, 'image');
+            setForm((prev) => ({ ...prev, poster: url }));
+        } catch (err) {
+            console.error('Poster upload failed:', err);
+        }
+    };
+
+    const handleRulebookChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (file.type !== 'application/pdf') {
+            toast.error('Please select a PDF file');
+            return;
+        }
+
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            toast.error('PDF size should be less than 10MB');
+            return;
+        }
+
+        try {
+            const url = await handleFileUpload(file, 'pdf');
+            setForm((prev) => ({ ...prev, rulebook: url }));
+        } catch (err) {
+            console.error('Rulebook upload failed:', err);
+        }
     };
 
     const handleSubmit = async (e: FormEvent) => {
@@ -291,26 +369,63 @@ export default function EventForm({ eventId }: EventFormProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Poster URL</label>
-                        <input
-                            type="text"
-                            name="poster"
-                            value={form.poster}
-                            onChange={handleChange}
-                            required
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Event Poster
+                        </label>
+                        <div className="space-y-2">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handlePosterChange}
+                                disabled={uploading}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                            />
+                            {form.poster && (
+                                <div className="relative w-full h-40 rounded-lg overflow-hidden border border-gray-200">
+                                    <Image
+                                        src={form.poster}
+                                        alt="Event poster preview"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )}
+                            {uploading && (
+                                <p className="text-xs text-blue-600">Uploading...</p>
+                            )}
+                        </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Rulebook URL</label>
-                        <input
-                            type="text"
-                            name="rulebook"
-                            value={form.rulebook}
-                            onChange={handleChange}
-                            required
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Rulebook (PDF)
+                        </label>
+                        <div className="space-y-2">
+                            <input
+                                type="file"
+                                accept=".pdf"
+                                onChange={handleRulebookChange}
+                                disabled={uploading}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                            />
+                            {form.rulebook && (
+                                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
+                                    <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                                    </svg>
+                                    <a
+                                        href={form.rulebook}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-blue-600 hover:underline truncate"
+                                    >
+                                        View Rulebook PDF
+                                    </a>
+                                </div>
+                            )}
+                            {uploading && (
+                                <p className="text-xs text-blue-600">Uploading...</p>
+                            )}
+                        </div>
                     </div>
                 </div>
 

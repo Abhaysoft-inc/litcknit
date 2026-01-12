@@ -7,12 +7,14 @@ import postModel from "@/models/post";
 // GET /api/posts/[id] - get a single post
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
-        const post = await postModel.findById(params.id).lean();
+        const { id } = await params;
+
+        const post = await postModel.findById(id).lean();
 
         if (!post) {
             return NextResponse.json(
@@ -34,15 +36,16 @@ export async function GET(
 // PATCH /api/posts/[id] - update a post
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
+        const { id } = await params;
         const body = await req.json();
 
         const post = await postModel.findByIdAndUpdate(
-            params.id,
+            id,
             { $set: body },
             { new: true, runValidators: true }
         );
@@ -71,12 +74,14 @@ export async function PATCH(
 // DELETE /api/posts/[id] - delete a post
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
-        const post = await postModel.findByIdAndDelete(params.id);
+        const { id } = await params;
+
+        const post = await postModel.findByIdAndDelete(id);
 
         if (!post) {
             return NextResponse.json(

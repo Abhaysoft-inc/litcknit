@@ -3,20 +3,9 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { HiLocationMarker, HiCalendar, HiClock, HiUsers, HiTicket } from 'react-icons/hi'
-import { IoMdTrophy } from 'react-icons/io'
 import { useParams, useRouter } from 'next/navigation'
 import Navbar from '@/components/home/Navbar'
 import Footer from '@/components/home/Footer'
-import dynamic from 'next/dynamic'
-
-const PDFViewer = dynamic(() => import('@/components/PDFViewer'), {
-    ssr: false,
-    loading: () => (
-        <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-skin-deep"></div>
-        </div>
-    ),
-})
 
 interface Event {
     _id: string
@@ -33,17 +22,7 @@ interface Event {
     teamSize?: number
     prizes?: string
     rulebook: string
-    registrations: {
-        _id: string
-        name: string
-        email: string
-        teamName?: string
-        result?: {
-            position?: string
-            customPosition?: string
-            remarks?: string
-        }
-    }[]
+    registrations: any[]
 }
 
 const EventDetailPage = () => {
@@ -68,9 +47,6 @@ const EventDetailPage = () => {
                 }
 
                 setEvent(data.data)
-                console.log('Event data:', data.data);
-                console.log('Registrations:', data.data.registrations);
-                console.log('Results count:', data.data.registrations?.filter((r: any) => r.result?.position).length);
             } catch (err) {
                 console.error(err)
                 setError('Failed to load event')
@@ -208,7 +184,7 @@ const EventDetailPage = () => {
                             )}
 
                             {/* Agenda */}
-                            {/* <div className="mt-12">
+                            <div className="mt-12">
                                 <h3 className="text-2xl font-serif text-skin-deep mb-6">Event Agenda</h3>
                                 <div className="space-y-4">
                                     {eventAgenda.map((item, index) => (
@@ -224,117 +200,14 @@ const EventDetailPage = () => {
                                         </div>
                                     ))}
                                 </div>
-                            </div> */}
-
-                            {/* Results Section */}
-                            {event.status === 'Completed' && (
-                                <div className="mt-12">
-                                    <h3 className="text-2xl font-serif text-skin-deep mb-6 flex items-center gap-2">
-                                        <IoMdTrophy className="text-yellow-500" />
-                                        Event Results
-                                    </h3>
-
-                                    {event.registrations && event.registrations.filter(r => r.result?.position).length > 0 ? (
-                                        <div className="space-y-4">
-                                            {/* Winners Section */}
-                                            {['1st', '2nd', '3rd'].map((position) => {
-                                                const winners = event.registrations.filter(r => r.result?.position === position);
-                                                if (winners.length === 0) return null;
-
-                                                return (
-                                                    <div key={position} className="bg-gradient-to-r from-skin-lightest to-white rounded-xl p-6 border-2 border-skin-light">
-                                                        <div className="flex items-center gap-3 mb-4">
-                                                            <div className={`text-4xl ${position === '1st' ? 'text-yellow-500' :
-                                                                position === '2nd' ? 'text-gray-400' :
-                                                                    'text-amber-600'
-                                                                }`}>
-                                                                {position === '1st' ? '🥇' : position === '2nd' ? '🥈' : '🥉'}
-                                                            </div>
-                                                            <h4 className="text-xl font-bold text-skin-deep">
-                                                                {position} Place
-                                                            </h4>
-                                                        </div>
-                                                        <div className="space-y-3">
-                                                            {winners.map((winner) => (
-                                                                <div key={winner._id} className="bg-white rounded-lg p-4 shadow-sm">
-                                                                    <div className="flex items-start justify-between">
-                                                                        <div>
-                                                                            <p className="font-bold text-skin-deep text-lg">
-                                                                                {winner.teamName || winner.name}
-                                                                            </p>
-                                                                            {winner.teamName && (
-                                                                                <p className="text-sm text-skin-darker">Leader: {winner.name}</p>
-                                                                            )}
-                                                                            {winner.result?.remarks && (
-                                                                                <p className="text-sm text-gray-600 italic mt-1">
-                                                                                    "{winner.result.remarks}"
-                                                                                </p>
-                                                                            )}
-                                                                        </div>
-                                                                        <IoMdTrophy className={`text-2xl ${position === '1st' ? 'text-yellow-500' :
-                                                                            position === '2nd' ? 'text-gray-400' :
-                                                                                'text-amber-600'
-                                                                            }`} />
-                                                                    </div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-
-                                            {/* Other Results */}
-                                            {event.registrations.filter(r =>
-                                                r.result?.position && !['1st', '2nd', '3rd'].includes(r.result.position)
-                                            ).length > 0 && (
-                                                    <div className="bg-skin-lightest rounded-xl p-6">
-                                                        <h4 className="text-lg font-semibold text-skin-deep mb-4">Other Results</h4>
-                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                            {event.registrations
-                                                                .filter(r => r.result?.position && !['1st', '2nd', '3rd'].includes(r.result.position))
-                                                                .map((participant) => (
-                                                                    <div key={participant._id} className="bg-white rounded-lg p-3 shadow-sm">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-medium">
-                                                                                {participant.result?.position === 'custom'
-                                                                                    ? participant.result.customPosition
-                                                                                    : participant.result?.position}
-                                                                            </span>
-                                                                            <p className="font-semibold text-skin-deep text-sm">
-                                                                                {participant.teamName || participant.name}
-                                                                            </p>
-                                                                        </div>
-                                                                        {participant.result?.remarks && (
-                                                                            <p className="text-xs text-gray-600 italic mt-1 ml-2">
-                                                                                {participant.result.remarks}
-                                                                            </p>
-                                                                        )}
-                                                                    </div>
-                                                                ))}
-                                                        </div>
-                                                    </div>
-                                                )}
-                                        </div>
-                                    ) : (
-                                        <div className="bg-skin-lightest rounded-xl p-8 text-center">
-                                            <IoMdTrophy className="text-6xl text-gray-300 mx-auto mb-4" />
-                                            <p className="text-gray-600 text-lg">Results will be announced soon!</p>
-                                            <p className="text-gray-500 text-sm mt-2">Check back later for the winners.</p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            </div>
 
                             {/* Rulebook */}
                             {event.rulebook && (
                                 <div className="mt-12">
                                     <h3 className="text-2xl font-serif text-skin-deep mb-6">Rules & Guidelines</h3>
                                     <div className="bg-skin-lightest rounded-xl p-6">
-                                        {event.rulebook.endsWith('.pdf') || event.rulebook.includes('cloudinary.com') ? (
-                                            <PDFViewer fileUrl={event.rulebook} />
-                                        ) : (
-                                            <p className="text-skin-darker leading-relaxed whitespace-pre-line">{event.rulebook}</p>
-                                        )}
+                                        <p className="text-skin-darker leading-relaxed whitespace-pre-line">{event.rulebook}</p>
                                     </div>
                                 </div>
                             )}

@@ -7,12 +7,12 @@ import dbconnection from "@/config/dbconnection";
 // GET /api/members/[id] - Get a specific member
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
-        const { id } = params;
+        const { id } = await params;
 
         const member = await memberModel.findById(id);
 
@@ -40,12 +40,12 @@ export async function GET(
 // PUT /api/members/[id] - Update a member
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
-        const { id } = params;
+        const { id } = await params;
         const body = await req.json();
 
         const member = await memberModel.findByIdAndUpdate(
@@ -79,12 +79,12 @@ export async function PUT(
 // DELETE /api/members/[id] - Delete a member
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbconnection();
 
-        const { id } = params;
+        const { id } = await params;
 
         const member = await memberModel.findByIdAndDelete(id);
 

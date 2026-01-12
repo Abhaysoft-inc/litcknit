@@ -25,7 +25,7 @@ const Navbar = () => {
                         alt="Literary Council Logo"
                         width={55}
                         height={70}
-                        className="object-fill md:w-[60px] md:h-[65px]"
+                        className="object-fill md:w-[60px] md:h-[70px]"
                     />
                 </a>
 

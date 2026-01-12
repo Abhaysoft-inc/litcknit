@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import eventModel from "@/models/event";
 import dbconnection from "@/config/dbconnection";
+import mongoose from "mongoose";
 
 // GET /api/events/[id] - Get single event
 export async function GET(
@@ -14,9 +15,16 @@ export async function GET(
 
         const { id } = await context.params;
 
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return NextResponse.json({
+                success: false,
+                message: 'Invalid event ID format'
+            }, { status: 400 });
+        }
+
         const event = await eventModel
             .findById(id)
-
             .lean();
 
         if (!event) {

@@ -88,8 +88,20 @@ const eventSchema = new mongoose.Schema({
         },
         status: {
             type: String,
-            enum: ['registered', 'attended', 'cancelled'],
+            enum: ['registered', 'attended', 'cancelled', 'banned', 'disqualified'],
             default: 'registered'
+        },
+        result: {
+            position: {
+                type: String,
+                enum: ['1st', '2nd', '3rd', 'participated', 'custom']
+            },
+            customPosition: {
+                type: String
+            },
+            remarks: {
+                type: String
+            }
         }
     }],
     createdBy: {
