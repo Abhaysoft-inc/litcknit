@@ -6,56 +6,41 @@ if (!MONGODB_URI) {
     throw new Error('Please define MONGODB_URI environment variable');
 }
 
-// Declare global type for caching
-declare global {
-    var mongoose: {
-        conn: any | null;
-        promise: Promise<any> | null;
-    };
-}
-
-// Initialize cache
-let cached = global.mongoose;
-
-if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
-}
-
 // Optimized connection options for serverless
 const options = {
-    bufferCommands: false, // Disable buffering for immediate errors
-    maxPoolSize: 10, // Connection pool size (good for serverless)
-    minPoolSize: 2, // Minimum pool size
-    serverSelectionTimeoutMS: 5000, // Timeout for server selection
-    socketTimeoutMS: 45000, // Socket timeout
-    maxIdleTimeMS: 10000, // Close idle connections after 10s
+    bufferCommands: false,
+    maxPoolSize: 10,
+    minPoolSize: 2,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxIdleTimeMS: 10000,
 };
 
+// Single connection promise
+let connectionPromise: Promise<typeof mongoose> | null = null;
+
 async function dbconnection() {
-    // Return existing connection if available
-    if (cached.conn) {
-        return cached.conn;
+    // If already connected, return immediately
+    if (mongoose.connection.readyState === 1) {
+        return mongoose;
     }
 
-    // Create new connection if promise doesn't exist
-    if (!cached.promise) {
-        cached.promise = mongoose.connect(MONGODB_URI, options).then((mongoose) => {
-            console.log('MongoDB connected successfully');
-            return mongoose;
-        });
+    // If connection is in progress, wait for it
+    if (connectionPromise) {
+        return connectionPromise;
     }
 
-    try {
-        // Wait for connection and cache it
-        cached.conn = await cached.promise;
-    } catch (error) {
-        // Reset promise on error so next call retries
-        cached.promise = null;
+    // Create new connection
+    connectionPromise = mongoose.connect(MONGODB_URI, options).then((mongoose) => {
+        console.log('MongoDB connected successfully');
+        return mongoose;
+    }).catch((error) => {
+        connectionPromise = null; // Reset on error
         console.error('MongoDB connection error:', error);
         throw error;
-    }
+    });
 
-    return cached.conn;
+    return connectionPromise;
 }
 
 export default dbconnection;
