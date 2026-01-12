@@ -4,71 +4,72 @@ import React from 'react';
 
 export default function HeroSection() {
     return (
-        <section className="relative w-full h-[calc(100vh-64px)] min-h-[500px] flex items-center justify-center bg-skin-lightest p-4 md:p-8 overflow-hidden">
+        <section className="relative w-full h-[calc(100vh-64px)] overflow-hidden bg-skin-lightest flex flex-col items-center justify-center">
 
-            {/* Background Texture - Dot Grid */}
-            <div className="absolute inset-0 z-0 opacity-[0.03]"
-                style={{ backgroundImage: 'radial-gradient(#4a3f2e 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}>
+            {/* Background Texture - Abstract Lines */}
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+                <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-skin-darker/10 to-transparent"></div>
+                <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-skin-darker/10 to-transparent"></div>
+                <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-skin-darker/10 to-transparent"></div>
+                <div className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-skin-darker/10 to-transparent"></div>
             </div>
 
-            {/* Main Content Frame - "The Book Cover" Look */}
-            <div className="relative z-10 w-full max-w-4xl bg-skin-lighter/30 backdrop-blur-sm border border-skin-base/20 p-2 rounded-sm shadow-xl">
+            <div className="container max-w-6xl mx-auto px-6 relative z-10 text-center">
 
-                {/* Inner Border Frame */}
-                <div className="border-[3px] border-double border-skin-darker/30 p-8 md:p-12 lg:p-16 text-center relative overflow-hidden rounded-sm">
+                {/* Top Label */}
+                <p className="font-sans text-xs md:text-sm font-bold tracking-[0.5em] text-skin-medium uppercase mb-4 md:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-                    {/* Corner Flourishes */}
-                    <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-skin-darker/40"></div>
-                    <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-skin-darker/40"></div>
-                    <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-skin-darker/40"></div>
-                    <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-skin-darker/40"></div>
+                </p>
 
-                    {/* Content */}
-                    <div className="space-y-6 relative z-10">
-                        <div className="flex flex-col items-center gap-2">
-                            <span className="h-px w-12 bg-skin-darker"></span>
-                            <span className="font-sans text-[10px] md:text-xs tracking-[0.3em] uppercase text-skin-darker font-medium">Literary Council</span>
-                            <span className="h-px w-12 bg-skin-darker"></span>
-                        </div>
+                {/* Massive Typography */}
+                <h1 className="flex flex-col items-center justify-center font-serif font-black text-skin-darkest leading-none tracking-tighter cursor-default select-none">
+                    <span className="text-[12vw] md:text-[10vw] hover:text-skin-deep transition-colors duration-500 animate-in zoom-in-95 duration-1000">
+                        LITERARY
+                    </span>
+                    <span className="flex items-center gap-2 md:gap-6 text-[12vw] md:text-[10vw] -mt-2 md:-mt-6 animate-in zoom-in-95 duration-1000 delay-150">
+                        <span className="h-1.5 md:h-3 w-12 md:w-32 bg-skin-base/40 rounded-full"></span>
+                        <span className="italic text-skin-medium hover:text-skin-darkest transition-colors duration-500">COUNCIL</span>
+                        <span className="h-1.5 md:h-3 w-12 md:w-32 bg-skin-base/40 rounded-full"></span>
+                    </span>
+                    <span className="text-[5vw] md:text-[3vw] font-sans font-light tracking-[0.2em] text-skin-darker mt-4 md:mt-6 border-t border-b border-skin-base/20 py-2 md:py-4 w-full max-w-4xl animate-in fade-in duration-1000 delay-300">
+                        KNIT SULTANPUR
+                    </span>
+                </h1>
 
-                        <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-skin-darkest font-medium leading-tight tracking-tight">
-                            The Art of <br />
-                            <span className="italic text-skin-deep relative">
-                                Storytelling
-                                {/* Underline accent */}
-                                <span className="absolute -bottom-2 left-0 w-full h-1 bg-skin-base/30 rounded-full transform -rotate-1"></span>
-                            </span>
-                        </h1>
+                {/* Description */}
+                <p className="max-w-xl mx-auto mt-8 md:mt-12 text-base md:text-lg text-skin-darker/80 font-medium leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+                    Where ink meets soul. Join the premier community of writers, poets, and storytellers.
+                </p>
 
-                        <p className="max-w-lg mx-auto text-base md:text-lg text-skin-darkest/80 font-serif leading-relaxed italic">
-                            &ldquo;Words are the voice of the heart.&rdquo;
-                        </p>
+                {/* Actions */}
+                <div className="mt-10 md:mt-14 flex items-center justify-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">
+                    <button
+                        onClick={() => document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="group flex items-center gap-2 text-skin-darkest font-bold tracking-wider hover:text-skin-deep transition-colors text-sm md:text-base"
+                    >
+                        <span className="border-b-2 border-skin-darkest group-hover:border-skin-deep pb-0.5 transition-colors">EXPLORE EVENTS</span>
+                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
 
-                        <p className="max-w-md mx-auto text-skin-darker font-sans leading-relaxed text-sm">
-                            We are a community dedicated to the craft of writing. Join us to explore, create, and share your unique narrative with the world.
-                        </p>
-
-                        <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <button
-                                onClick={() => document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="min-w-[140px] px-6 py-2.5 bg-skin-darkest text-skin-lightest text-sm font-medium tracking-wide hover:bg-skin-deep transition-colors duration-300 shadow-md"
-                            >
-                                Explore
-                            </button>
-                            <button
-                                onClick={() => document.getElementById('posts-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="min-w-[140px] px-6 py-2.5 bg-transparent border border-skin-darkest text-skin-darkest text-sm font-medium tracking-wide hover:bg-skin-darkest hover:text-skin-lightest transition-all duration-300"
-                            >
-                                Read
-                            </button>
-                        </div>
-                    </div>
+                    <button
+                        onClick={() => document.getElementById('posts-section')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="group flex items-center gap-2 text-skin-darker/70 font-bold tracking-wider hover:text-skin-darkest transition-colors text-sm md:text-base"
+                    >
+                        <span className="hover:border-b-2 hover:border-skin-darkest pb-0.5 transition-all">Latest Posts</span>
+                    </button>
                 </div>
+
             </div>
 
-            {/* Subtle background blurred orbs for depth */}
-            <div className="absolute top-1/4 -left-20 w-80 h-80 bg-skin-base/20 rounded-full blur-[100px] pointer-events-none"></div>
-            <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-skin-deep/10 rounded-full blur-[100px] pointer-events-none"></div>
+            {/* Decorative Corner Watermark */}
+            <div className="absolute -bottom-12 -left-12 text-[15rem] font-serif text-skin-lighter/30 font-black pointer-events-none select-none italic leading-none opacity-50">
+                Lc
+            </div>
+
+            {/* Decorative Top Right Watermark */}
+            <div className="absolute -top-12 -right-12 text-[15rem] font-serif text-skin-lighter/30 font-black pointer-events-none select-none italic leading-none opacity-50 rotate-180">
+                Lc
+            </div>
 
         </section>
     );
