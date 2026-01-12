@@ -1,69 +1,74 @@
 'use client';
 
-import Image from 'next/image';
+import React from 'react';
 
-
-export default function HeroBeigeWithBgImage() {
+export default function HeroSection() {
     return (
-        <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-skin-lightest to-skin-light">
+        <section className="relative w-full h-[calc(100vh-64px)] min-h-[500px] flex items-center justify-center bg-skin-lightest p-4 md:p-8 overflow-hidden">
 
-            {/* Animated Floating Words Background */}
-            <div className="absolute inset-0 overflow-hidden opacity-20">
-                <div className="absolute top-20 left-10 text-6xl font-serif text-skin-deep animate-float">Poetry</div>
-                <div className="absolute top-40 right-20 text-4xl font-serif text-skin-medium animate-float-delay-1">Stories</div>
-                <div className="absolute bottom-40 left-1/4 text-5xl font-serif text-skin-base animate-float-delay-2">Words</div>
-                <div className="absolute bottom-20 right-1/3 text-3xl font-serif text-skin-darker animate-float-delay-3">Dreams</div>
-                <div className="absolute top-1/3 left-1/2 text-4xl font-serif text-skin-light animate-float-delay-4">Create</div>
+            {/* Background Texture - Dot Grid */}
+            <div className="absolute inset-0 z-0 opacity-[0.03]"
+                style={{ backgroundImage: 'radial-gradient(#4a3f2e 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}>
             </div>
 
-            {/* Main Content Container */}
-            <div className="relative z-10 max-w-6xl mx-auto px-8 py-20 text-center">
+            {/* Main Content Frame - "The Book Cover" Look */}
+            <div className="relative z-10 w-full max-w-4xl bg-skin-lighter/30 backdrop-blur-sm border border-skin-base/20 p-2 rounded-sm shadow-xl">
 
-                {/* Tagline Badge */}
-                <div className="inline-block mb-6">
-                    <span className="bg-skin-deep/10 text-skin-darkest px-6 py-2 rounded-full text-sm font-semibold border-2 border-skin-base">
-                        Literary Council KNIT Sultanpur
-                    </span>
-                </div>
+                {/* Inner Border Frame */}
+                <div className="border-[3px] border-double border-skin-darker/30 p-8 md:p-12 lg:p-16 text-center relative overflow-hidden rounded-sm">
 
-                {/* Main Heading - Stacked Style */}
-                <h1 className="space-y-2 mb-8">
-                    <div className="text-4xl md:text-6xl lg:text-7xl font-serif text-skin-darkest font-bold">
-                        Unleash Your
+                    {/* Corner Flourishes */}
+                    <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-skin-darker/40"></div>
+                    <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-skin-darker/40"></div>
+                    <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-skin-darker/40"></div>
+                    <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-skin-darker/40"></div>
+
+                    {/* Content */}
+                    <div className="space-y-6 relative z-10">
+                        <div className="flex flex-col items-center gap-2">
+                            <span className="h-px w-12 bg-skin-darker"></span>
+                            <span className="font-sans text-[10px] md:text-xs tracking-[0.3em] uppercase text-skin-darker font-medium">Literary Council</span>
+                            <span className="h-px w-12 bg-skin-darker"></span>
+                        </div>
+
+                        <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-skin-darkest font-medium leading-tight tracking-tight">
+                            The Art of <br />
+                            <span className="italic text-skin-deep relative">
+                                Storytelling
+                                {/* Underline accent */}
+                                <span className="absolute -bottom-2 left-0 w-full h-1 bg-skin-base/30 rounded-full transform -rotate-1"></span>
+                            </span>
+                        </h1>
+
+                        <p className="max-w-lg mx-auto text-base md:text-lg text-skin-darkest/80 font-serif leading-relaxed italic">
+                            &ldquo;Words are the voice of the heart.&rdquo;
+                        </p>
+
+                        <p className="max-w-md mx-auto text-skin-darker font-sans leading-relaxed text-sm">
+                            We are a community dedicated to the craft of writing. Join us to explore, create, and share your unique narrative with the world.
+                        </p>
+
+                        <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <button
+                                onClick={() => document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="min-w-[140px] px-6 py-2.5 bg-skin-darkest text-skin-lightest text-sm font-medium tracking-wide hover:bg-skin-deep transition-colors duration-300 shadow-md"
+                            >
+                                Explore
+                            </button>
+                            <button
+                                onClick={() => document.getElementById('posts-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="min-w-[140px] px-6 py-2.5 bg-transparent border border-skin-darkest text-skin-darkest text-sm font-medium tracking-wide hover:bg-skin-darkest hover:text-skin-lightest transition-all duration-300"
+                            >
+                                Read
+                            </button>
+                        </div>
                     </div>
-                    <div className="text-5xl md:text-7xl lg:text-8xl font-serif text-skin-deep font-bold italic">
-                        Creative Voice
-                    </div>
-                </h1>
-
-                {/* Subtitle */}
-                <p className="text-lg md:text-xl text-skin-darker max-w-2xl mx-auto mb-10 leading-relaxed">
-                    Join a vibrant community of writers, poets, and storytellers.
-                    Where imagination meets expression, and every voice finds its stage.
-                </p>
-
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-                    <button
-                        onClick={() => document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="bg-skin-deep hover:bg-skin-darker text-white font-semibold py-4 px-8 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
-                    >
-                        Explore Events
-                    </button>
-                    <button
-                        onClick={() => document.getElementById('posts-section')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="bg-white hover:bg-skin-lighter text-skin-darkest font-semibold py-4 px-8 rounded-full shadow-lg transition-all duration-300 border-2 border-skin-base"
-                    >
-                        Read Latest Posts
-                    </button>
                 </div>
-
-
-
             </div>
 
-            {/* Decorative Bottom Wave */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-skin-light to-transparent"></div>
+            {/* Subtle background blurred orbs for depth */}
+            <div className="absolute top-1/4 -left-20 w-80 h-80 bg-skin-base/20 rounded-full blur-[100px] pointer-events-none"></div>
+            <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-skin-deep/10 rounded-full blur-[100px] pointer-events-none"></div>
 
         </section>
     );
