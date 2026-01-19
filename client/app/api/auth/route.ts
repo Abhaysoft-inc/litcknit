@@ -57,9 +57,9 @@ export async function POST(req: Request) {
         const token = await jwt.sign({
             userId: user._id,
             role: user.role
-        }, JWT_SECRET);
+        }, JWT_SECRET, { expiresIn: '7d' });
 
-        return NextResponse.json(
+        const response = NextResponse.json(
             {
                 message: "Login successful",
                 jwtToken: token,
@@ -68,8 +68,46 @@ export async function POST(req: Request) {
             { status: 200 }
         );
 
+        // Set secure cookie
+        response.cookies.set('adminToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60, // 7 days
+            path: '/',
+        });
+
+        return response;
+
     } catch (error) {
         console.error("Login error:", error);
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
+    }
+}
+
+// Logout endpoint
+export async function DELETE(req: Request) {
+    try {
+        const response = NextResponse.json(
+            { message: "Logout successful" },
+            { status: 200 }
+        );
+
+        // Clear the cookie
+        response.cookies.set('adminToken', '', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 0,
+            path: '/',
+        });
+
+        return response;
+    } catch (error) {
+        console.error("Logout error:", error);
         return NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }

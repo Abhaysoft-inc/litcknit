@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { MdAdminPanelSettings } from 'react-icons/md'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/context/AuthContext'
+import { AuthResponse } from '@/utils/auth'
 
 const AdminLoginPage = () => {
     const [email, setEmail] = useState('')
@@ -11,19 +13,14 @@ const AdminLoginPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const router = useRouter()
+    const { login, isAuthenticated } = useAuth()
 
     useEffect(() => {
         // Check if already authenticated
-        const token = localStorage.getItem('adminToken')
-        const user = localStorage.getItem('adminUser')
-
-        if (token && user) {
-            const parsedUser = JSON.parse(user)
-            if (parsedUser.role === 'admin') {
-                router.push('/admin/dashboard')
-            }
+        if (isAuthenticated) {
+            router.push('/admin/dashboard')
         }
-    }, [router])
+    }, [router, isAuthenticated])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -39,7 +36,7 @@ const AdminLoginPage = () => {
                 body: JSON.stringify({ email, password }),
             })
 
-            const data = await response.json()
+            const data: AuthResponse = await response.json()
 
             if (!response.ok) {
                 setError(data.error || 'Login failed')
@@ -52,9 +49,8 @@ const AdminLoginPage = () => {
                 return
             }
 
-            // Store token in localStorage
-            localStorage.setItem('adminToken', data.jwtToken)
-            localStorage.setItem('adminUser', JSON.stringify(data.user))
+            // Use AuthContext to set auth state
+            login(data.jwtToken, data.user)
 
             // Redirect to admin dashboard
             router.push('/admin/dashboard')

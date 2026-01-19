@@ -15,9 +15,9 @@ const Navbar = () => {
                     <Image
                         src="/foot-logo.png"
                         alt="KNIT Logo"
-                        width={40}
+                        width={60}
                         height={48}
-                        className="object-contain md:w-[50px] md:h-[60px]"
+                        className="object-contain md:w-[60px] md:h-[60px]"
                     />
                     <div className="h-10 md:h-12 w-px bg-gray-400" />
                     <Image
@@ -25,7 +25,7 @@ const Navbar = () => {
                         alt="Literary Council Logo"
                         width={55}
                         height={70}
-                        className="object-fill md:w-[60px] md:h-[70px]"
+                        className="object-fill md:w-[60px] md:h-[75px]"
                     />
                 </a>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -12,6 +13,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
+    const { logout, user } = useAuth();
 
     const menuItems = [
         { name: 'Dashboard', path: '/admin/dashboard', icon: '📊' },
@@ -20,9 +22,24 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         { name: 'Settings', path: '/admin/dashboard/settings', icon: '⚙️' }
     ];
 
-    const handleLogout = () => {
-        // Add logout logic here
-        router.push('/admin/login');
+    const handleLogout = async () => {
+        try {
+            // Call logout API to clear server-side cookie
+            await fetch('/api/auth', {
+                method: 'DELETE',
+            });
+
+            // Clear client-side auth state
+            logout();
+
+            // Redirect to login
+            router.push('/admin/login');
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Still logout locally even if API call fails
+            logout();
+            router.push('/admin/login');
+        }
     };
 
     return (
@@ -45,6 +62,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
+                        {user && (
+                            <div className="hidden sm:flex items-center gap-2">
+                                <div className="text-right">
+                                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                                    <p className="text-xs text-gray-500">{user.email}</p>
+                                </div>
+                            </div>
+                        )}
                         <Link
                             href="/"
                             className="text-sm text-gray-600 hover:text-gray-900"
