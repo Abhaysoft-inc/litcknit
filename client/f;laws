@@ -1,0 +1,2 @@
+unauthenticated users can also see draft and unpublished posts
+/api/posts?isWeeklyTop=true&status=published
