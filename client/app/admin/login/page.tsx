@@ -39,7 +39,7 @@ const AdminLoginPage = () => {
             const data: AuthResponse = await response.json()
 
             if (!response.ok) {
-                setError(data.error || 'Login failed')
+                setError('Login failed')
                 return
             }
 

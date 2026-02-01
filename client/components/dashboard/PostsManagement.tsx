@@ -12,6 +12,7 @@ interface Post {
     author: string;
     status: string;
     createdAt: string;
+    isWeeklyTop?: boolean;
 }
 
 export default function PostsManagement() {
@@ -74,6 +75,27 @@ export default function PostsManagement() {
 
             if (res.ok) {
                 toast.success(currentStatus === 'published' ? 'Post moved to draft' : 'Post published');
+                fetchPosts();
+            } else {
+                const data = await res.json().catch(() => null);
+                toast.error(data?.message || 'Failed to update post');
+            }
+        } catch (error) {
+            console.error('Failed to update post:', error);
+            toast.error('Failed to update post');
+        }
+    };
+
+    const toggleWeeklyTop = async (id: string, currentStatus: boolean) => {
+        try {
+            const res = await fetch(`/api/posts/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ isWeeklyTop: !currentStatus })
+            });
+
+            if (res.ok) {
+                toast.success(!currentStatus ? 'Added to Weekly Top' : 'Removed from Weekly Top');
                 fetchPosts();
             } else {
                 const data = await res.json().catch(() => null);
@@ -160,9 +182,21 @@ export default function PostsManagement() {
                                         <div className="flex items-center gap-4 text-xs text-gray-500">
                                             <span>👤 {post.author}</span>
                                             <span>📅 {new Date(post.createdAt).toLocaleDateString()}</span>
+                                            {post.isWeeklyTop && (
+                                                <span className="text-indigo-600 font-medium">✨ Weekly Top</span>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
+                                        <button
+                                            onClick={() => toggleWeeklyTop(post._id, post.isWeeklyTop || false)}
+                                            className={`px-3 py-1 text-sm rounded transition-colors ${post.isWeeklyTop
+                                                    ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+                                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                }`}
+                                        >
+                                            {post.isWeeklyTop ? '★ Top' : '☆ Top'}
+                                        </button>
                                         <button
                                             onClick={() => togglePublish(post._id, post.status)}
                                             className={`px-3 py-1 text-sm rounded transition-colors ${post.status === 'published'

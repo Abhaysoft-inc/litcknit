@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const status = searchParams.get("status"); // draft | published | archived
         const type = searchParams.get("type");     // blog | story | shayari | poem
+        const isWeeklyTop = searchParams.get("isWeeklyTop");
 
         const query: any = {};
 
@@ -19,6 +20,10 @@ export async function GET(req: NextRequest) {
 
         if (type) {
             query.type = type;
+        }
+
+        if (isWeeklyTop === 'true') {
+            query.isWeeklyTop = true;
         }
 
         const posts = await postModel

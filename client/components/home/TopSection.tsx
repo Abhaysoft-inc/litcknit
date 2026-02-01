@@ -1,78 +1,44 @@
 'use client';
 
-import { FaChevronLeft, FaChevronRight, FaStar, FaEye } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FiTrendingUp } from 'react-icons/fi';
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
-interface TopItem {
-    id: number;
+interface Post {
+    _id: string;
     title: string;
-    category: string;
+    type: string; // Used as category
     author: string;
-    rating: number;
-    reads: string;
-    image: string;
+    image?: string;
+    excerpt?: string;
+    createdAt: string;
+    // We don't have rating/reads in the backend model yet, so we'll omit them or use placeholders
 }
-
-const topItems: TopItem[] = [
-    {
-        id: 1,
-        title: "The Art of Storytelling",
-        category: "Creative Writing",
-        author: "Sarah Mitchell",
-        rating: 4.8,
-        reads: "2.3K",
-        image: "/img1.jpg"
-    },
-    {
-        id: 2,
-        title: "Poetry Workshop Highlights",
-        category: "Poetry",
-        author: "James Carter",
-        rating: 4.9,
-        reads: "1.8K",
-        image: "/img2.jpg"
-    },
-    {
-        id: 3,
-        title: "Modern Literature Debate",
-        category: "Discussion",
-        author: "Emma Wilson",
-        rating: 4.7,
-        reads: "3.1K",
-        image: "/img3.jpg"
-    },
-    {
-        id: 4,
-        title: "Short Stories Collection",
-        category: "Fiction",
-        author: "Michael Brown",
-        rating: 4.6,
-        reads: "1.5K",
-        image: "/img1.jpg"
-    },
-    {
-        id: 5,
-        title: "Writers' Meetup Notes",
-        category: "Community",
-        author: "Lisa Anderson",
-        rating: 4.9,
-        reads: "2.7K",
-        image: "/img2.jpg"
-    },
-    {
-        id: 6,
-        title: "Literary Analysis Series",
-        category: "Analysis",
-        author: "David Lee",
-        rating: 4.8,
-        reads: "2.2K",
-        image: "/img3.jpg"
-    }
-];
 
 export default function TopSection() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTopPosts = async () => {
+            try {
+                const res = await fetch('/api/posts?isWeeklyTop=true&status=published');
+                const data = await res.json();
+                if (data.success) {
+                    setPosts(data.data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch top posts:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTopPosts();
+    }, []);
 
     const scroll = (direction: 'left' | 'right') => {
         if (scrollContainerRef.current) {
@@ -87,6 +53,30 @@ export default function TopSection() {
             });
         }
     };
+
+    // Helper to check valid image source (same as PostsSection)
+    const isValidImageSource = (src?: string) => {
+        if (!src) return false;
+        if (src.startsWith('/')) return true;
+        try {
+            new URL(src);
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
+    if (loading) {
+        return (
+            <section className="py-20 px-8 md:px-20 bg-gradient-to-b from-skin-lightest to-white">
+                <div className="max-w-7xl mx-auto flex justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-skin-base"></div>
+                </div>
+            </section>
+        );
+    }
+
+    if (posts.length === 0) return null; // Don't show section if no top posts
 
     return (
         <section className="py-20 px-8 md:px-20 bg-gradient-to-b from-skin-lightest to-white">
@@ -132,50 +122,54 @@ export default function TopSection() {
                         msOverflowStyle: 'none',
                     }}
                 >
-                    {topItems.map((item, index) => (
-                        <div
-                            key={item.id}
+                    {posts.map((post, index) => (
+                        <Link
+                            href={`/posts/${post._id}`}
+                            key={post._id}
                             className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer border border-skin-lighter hover:border-skin-base"
                         >
                             {/* Image Container */}
                             <div className="relative h-48 bg-skin-light overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-br from-skin-base/20 to-skin-deep/40 group-hover:opacity-80 transition-opacity duration-300" />
+                                {isValidImageSource(post.image) && (
+                                    <Image
+                                        src={post.image!}
+                                        alt={post.title}
+                                        fill
+                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                        unoptimized={!!post.image && !post.image.startsWith('/')}
+                                    />
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-br from-skin-base/20 to-skin-deep/40 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none" />
 
                                 {/* Rank Badge */}
-                                <div className="absolute top-4 left-4 bg-amber-600 text-white font-bold text-lg px-4 py-2 rounded-full shadow-lg">
+                                <div className="absolute top-4 left-4 bg-amber-600 text-white font-bold text-lg px-4 py-2 rounded-full shadow-lg z-10">
                                     #{index + 1}
                                 </div>
 
                                 {/* Category Badge */}
-                                <div className="absolute top-4 right-4 bg-white/90 text-skin-deep text-sm font-semibold px-3 py-1 rounded-full">
-                                    {item.category}
+                                <div className="absolute top-4 right-4 bg-white/90 text-skin-deep text-sm font-semibold px-3 py-1 rounded-full z-10 capitalize">
+                                    {post.type}
                                 </div>
                             </div>
 
                             {/* Card Content */}
                             <div className="p-6">
                                 <h3 className="text-xl font-serif text-skin-darkest mb-2 line-clamp-2 group-hover:text-skin-deep transition-colors">
-                                    {item.title}
+                                    {post.title}
                                 </h3>
 
                                 <p className="text-sm text-skin-medium mb-4">
-                                    by {item.author}
+                                    by {post.author}
                                 </p>
 
-                                {/* Stats */}
+                                {/* Date */}
                                 <div className="flex items-center justify-between pt-4 border-t border-skin-lighter">
-                                    <div className="flex items-center gap-2">
-                                        <FaStar className="w-5 h-5 text-amber-500" />
-                                        <span className="text-skin-deep font-semibold">{item.rating}</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-1 text-skin-medium">
-                                        <FaEye className="w-5 h-5" />
-                                        <span className="font-semibold">{item.reads}</span>
+                                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                                        <span>📅 {new Date(post.createdAt).toLocaleDateString()}</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

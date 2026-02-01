@@ -24,6 +24,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: false // For blogs
     },
+    isWeeklyTop: {
+        type: Boolean,
+        default: false
+    },
     lines: [{
         type: String,
         trim: true
